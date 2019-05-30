@@ -1,7 +1,7 @@
 ## k9scopy  
 foobar  
-|Severity        |Policy                   |Rule                  | ID                      | Enabled |
-|----------------|-------------------------|----------------------|-------------------------|---------|
+|Severity        |Policy                   |Rule                  | ID                      | Enabled |  
+|----------------|-------------------------|----------------------|-------------------------|---------|  
 | high | ``do not run containers as root``  | ``$.spec.template.spec.securityContext.runAsUser < 1``  | 314eba46-a376-43f6-9a0a-8517818301f1 | True |  
 | medium | ``do not run containers with dangerous capabilities``  | ``$.spec.template.spec.containers[*].securityContext.capabilities.add contains FSETID or $.spec.template.spec.containers[*].securityContext.capabilities.add contains SETUID or $.spec.template.spec.containers[*].securityContext.capabilities.add contains SETGID or $.spec.template.spec.containers[*].securityContext.capabilities.add contains SYS_CHROOT or $.spec.template.spec.containers[*].securityContext.capabilities.add contains SYS_PTRACE or $.spec.template.spec.containers[*].securityContext.capabilities.add contains CHOWN or $.spec.template.spec.containers[*].securityContext.capabilities.add contains NET_RAW or $.spec.template.spec.containers[*].securityContext.capabilities.add contains NET_ADMIN or $.spec.template.spec.containers[*].securityContext.capabilities.add contains SYS_ADMIN or $.spec.template.spec.containers[*].securityContext.capabilities.add contains NET_BIND_SERVICE ``  | 135420a6-3206-4c29-b944-846f65cea43e | True |  
 | high | ``'all' capabilities should be dropped``  | ``$.spec.template.spec.containers[*].securityContext.capabilities.drop exists and !contains all``  | 4682a6f1-2a1b-4f5a-938c-cdd3fa421a63 | True |  
