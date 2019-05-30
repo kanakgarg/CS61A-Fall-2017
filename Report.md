@@ -1,4 +1,4 @@
-## k75s  
+## k8s  
 foobar  
 |Severity        |Policy                   |Rule                  | ID                      | Enabled |
 |----------------|-------------------------|----------------------|-------------------------|---------|
@@ -6,11 +6,15 @@ foobar
   
   
   
-| medium | ``do not run containers with dangerous capabilities``  | ``$.spec.template.spec.containers[*].securityContext.capabilities.add[*] is member of ('FSETID' ,  'SETUID' ,  'SETGID' ,  'SYS_CHROOT' ,  'SYS_PTRACE' ,  'CHOWN' ,  'NET_RAW' ,  'NET_ADMIN' ,  'SYS_ADMIN' , 'NET_BIND_SERVICE')``  | 135420a6-3206-4c29-b944-846f65cea43e | True |  
+| medium | ``do not run containers with dangerous capabilities``  | ``$.spec.template.spec.containers[*].securityContext.capabilities.add contains FSETID or $.spec.template.spec.containers[*].securityContext.capabilities.add contains SETUID or $.spec.template.spec.containers[*].securityContext.capabilities.add contains SETGID or $.spec.template.spec.containers[*].securityContext.capabilities.add contains SYS_CHROOT or $.spec.template.spec.containers[*].securityContext.capabilities.add contains SYS_PTRACE or $.spec.template.spec.containers[*].securityContext.capabilities.add contains CHOWN or $.spec.template.spec.containers[*].securityContext.capabilities.add contains NET_RAW or $.spec.template.spec.containers[*].securityContext.capabilities.add contains NET_ADMIN or $.spec.template.spec.containers[*].securityContext.capabilities.add contains SYS_ADMIN or $.spec.template.spec.containers[*].securityContext.capabilities.add contains NET_BIND_SERVICE ``  | 135420a6-3206-4c29-b944-846f65cea43e | True |  
   
   
   
 | high | ``'all' capabilities should be dropped``  | ``$.spec.template.spec.containers[*].securityContext.capabilities.drop exists and !contains all``  | 4682a6f1-2a1b-4f5a-938c-cdd3fa421a63 | True |  
+  
+  
+  
+| high | ``avoid running privileged containers ``  | ``$.spec.template.spec.containers[*].securityContext.privileged == true``  | 92714c07-d12b-4635-ae6a-514c5c428c5a | True |  
   
   
   
@@ -34,7 +38,7 @@ foobar
   
   
   
-| medium | ``do not allow volume claims to be read-write by many nodes``  | ``$.spec.volumeClaimTemplates[*].spec.accessModes == ReadWriteMany``  | f9bcb4b8-3f22-448a-8521-9e09e3a994e0 | True |  
+| medium | ``do not allow volume claims to be read-write by many nodes``  | ``$.spec.volumeClaimTemplates[*].spec.accessModes == ReadWriteMany``  | 802f2ed9-0b0d-4627-bf1a-7cb0ccfdd71c | True |  
   
   
   
@@ -42,11 +46,7 @@ foobar
   
   
   
-| high | ``do not share host network with containers``  | ``$.spec.template.spec.hostNetwork is true``  | 99544e17-fc8f-4c77-963e-083ab80c53b0  | True |  
-  
-  
-  
-| high | ``avoid running privileged containers ``  | ``$.spec.template.spec.containers[*].securityContext.privileged is true``  | 92714c07-d12b-4635-ae6a-514c5c428c5a | True |  
+| high | ``do not share host network with containers``  | ``$.spec.template.spec.hostNetwork == true``  | 99544e17-fc8f-4c77-963e-083ab80c53b0  | True |  
   
   
   
