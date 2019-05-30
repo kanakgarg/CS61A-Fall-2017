@@ -1,5 +1,6 @@
 ## cft  
 foobar  
+  
 |Severity|Policy|Rule| ID   | Enabled |  
 |------|------|------|------|-------|  
 | high | ``AWS Redshift instances are not encrypted``  | ``$.Resources.[*].Type equals AWS::Redshift::Cluster and ($.Resources.[*].Properties.Encrypted does not exist or ($.Resources.[*].Properties.Encrypted exists and $.Resources.[*].Properties.Encrypted is false))``  | 0132bbb2-c733-4c36-9c5d-c58967c7d1a6 | True |  
@@ -31,6 +32,7 @@ foobar
   
 ## k75s  
 foobar  
+  
 |Severity|Policy|Rule| ID   | Enabled |  
 |------|------|------|------|-------|  
 | high | ``do not run containers as root``  | ``$.spec.template.spec.securityContext.runAsUser < 1``  | 314eba46-a376-43f6-9a0a-8517818301f1 | True |  
@@ -49,6 +51,7 @@ foobar
   
 ## k8s  
 foobar  
+  
 |Severity|Policy|Rule| ID   | Enabled |  
 |------|------|------|------|-------|  
 | high | ``do not run containers as root``  | ``$.spec.template.spec.securityContext.runAsUser < 1``  | 314eba46-a376-43f6-9a0a-8517818301f1 | True |  
