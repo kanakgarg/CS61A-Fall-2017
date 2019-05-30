@@ -1,16 +1,104 @@
-## k75s  
+## cft  
 foobar  
 |Severity        |Policy                   |Rule                  | ID                      | Enabled |
 |----------------|-------------------------|----------------------|-------------------------|---------|
-| high | ``do not run containers as root``  | ``$.spec.template.spec.securityContext.runAsUser < 1``  | 314eba46-a376-43f6-9a0a-8517818301f1 | True |  
-| medium | ``do not run containers with dangerous capabilities``  | ``$.spec.template.spec.containers[*].securityContext.capabilities.add[*] is member of ('FSETID' ,  'SETUID' ,  'SETGID' ,  'SYS_CHROOT' ,  'SYS_PTRACE' ,  'CHOWN' ,  'NET_RAW' ,  'NET_ADMIN' ,  'SYS_ADMIN' , 'NET_BIND_SERVICE')``  | 135420a6-3206-4c29-b944-846f65cea43e | True |  
-| high | ``'all' capabilities should be dropped``  | ``$.spec.template.spec.containers[*].securityContext.capabilities.drop exists and !contains all``  | 4682a6f1-2a1b-4f5a-938c-cdd3fa421a63 | True |  
-| medium | ``ensure containers are immutable ``  | ``$.spec.template.spec.containers[*].securityContext.readOnlyRootFilesystem exists and  is false``  | c448b01c-7f95-4e9f-97e1-c640733af44f | True |  
-| medium | ``do not allow sharing host IPC namespace``  | ``$.spec.template.spec.hostIPC is true``  | 344fb01c-7195-3e9f-47e1-c640733af43f | True |  
-| medium | ``do not allow sharing host PID namespace``  | ``$.spec.template.spec.hostPID is true``  | 4c5d00c1-8f60-40bc-9566-a5b4e019752a | True |  
-| high | ``containers must be run as non-root``  | ``$.spec.template.spec.containers[*].securityContext.runAsNonRoot exists and is false``  | 2e22737c-a5b8-4808-8a8b-d99fc7e99505 | True |  
-| medium | ``entrypoint of the container must be run with a user with a high ID``  | ``$.spec.template.spec.containers[*].securityContext.runAsUser < 9999``  | 6e06b1a6-7eea-4730-91c2-9ac3fb676dce | True |  
-| medium | ``do not allow volume claims to be read-write by many nodes``  | ``$.spec.volumeClaimTemplates[*].spec.accessModes == ReadWriteMany``  | f9bcb4b8-3f22-448a-8521-9e09e3a994e0 | True |  
-| low | ``do not allow volume claims to be read by many nodes``  | ``$.spec.volumeClaimTemplates[*].spec.accessModes == ReadOnlyMany``  | 802f2ed9-0b0d-4627-bf1a-7cb0ccfdd71c | True |  
-| high | ``do not share host network with containers``  | ``$.spec.template.spec.hostNetwork is true``  | 99544e17-fc8f-4c77-963e-083ab80c53b0  | True |  
-| high | ``avoid running privileged containers ``  | ``$.spec.template.spec.containers[*].securityContext.privileged is true``  | 92714c07-d12b-4635-ae6a-514c5c428c5a | True |  
+| high | ``AWS Redshift instances are not encrypted``  | ``$.Resources.[*].Type equals AWS::Redshift::Cluster and ($.Resources.[*].Properties.Encrypted does not exist or ($.Resources.[*].Properties.Encrypted exists and $.Resources.[*].Properties.Encrypted is false))``  | 0132bbb2-c733-4c36-9c5d-c58967c7d1a6 | True |  
+  
+  
+  
+| medium | ``AWS Redshift clusters should not be publicly accessible``  | ``$.Resources.[*].Type equals AWS::Redshift::Cluster and ($.Resources.[*].Properties.PubliclyAccessible exists and $.Resources.[*].Properties.PubliclyAccessible is true)``  | d65fd313-1c5c-42a1-98b2-a73bdeda19a6 | True |  
+  
+  
+  
+| medium | ``AWS Redshift does not have require_ssl configured``  | ``$.Resources.[*].Type equals AWS::Redshift::ClusterParameterGroup and ($.Resources.[*].Properties.Parameters does not exist or (($.Resources.[*].Properties.Parameters[*].ParameterName contains require_ssl) and ($.Resources.[*].Properties.Parameters[*].ParameterValue is false)))``  | 7446ad28-8502-4d71-b334-18cef8d85a2b | True |  
+  
+  
+  
+| medium | ``AWS Redshift database does not have audit logging enabled``  | ``$.Resources.[*].Type equals AWS::Redshift::Cluster and ($.Resources.[*].Properties.LoggingProperties does not exist or $.Resources.[*].Properties.LoggingProperties is empty or $.Resources.[*].Properties.LoggingProperties.S3KeyPrefix does not exist or $.Resources.[*].Properties.LoggingProperties.S3KeyPrefix is empty)``  | 91c941aa-d110-4b33-9934-aadd86b1a4d9 | True |  
+  
+  
+  
+| medium | ``AWS Customer Master Key (CMK) rotation is not enabled``  | ``$.Resources.[*].Type equals AWS::KMS::Key and ($.Resources.[*].Properties.EnableKeyRotation does not exist or $.Resources.[*].Properties.EnableKeyRotation is false)``  | 497f7e2c-b702-47c7-9a07-f0f6404ac896 | True |  
+  
+  
+  
+| medium | ``AWS RDS instance with Multi-Availability Zone disabled``  | ``$.Resources.[*].Type equals AWS::RDS::DBInstance and ($.Resources.[*].Properties.MultiAZ does not exist or $.Resources.[*].Properties.MultiAZ is false)``  | f606fe0b-2950-42ce-a3b2-7f100ece5c3a | True |  
+  
+  
+  
+| medium | ``AWS S3 Object Versioning is disabled``  | ``$.Resources.[*].Type contains AWS::S3::Bucket and ($.Resources.[*].Properties.VersioningConfiguration does not exist or ($.Resources.[*].Properties.VersioningConfiguration exists and $.Resources.[*].Properties.VersioningConfiguration.Status does not equal Enabled))``  | 8ec3f878-0f5e-4782-b4cd-98018b217be5 | True |  
+  
+  
+  
+| medium | ``AWS SNS subscription is not configured with HTTPS``  | ``$.Resources.[*].Type equals AWS::SNS::Subscription and ($.Resources.[*].Properties.Protocol exists and $.Resources.[*].Properties.Protocol equals http)``  | b53e5177-96e1-4999-a9c8-6400190910bb | True |  
+  
+  
+  
+| medium | ``AWS SQS queue encryption using default KMS key instead of CMK``  | ``$.Resources.[*].Type equals AWS::SQS::Queue and ($.Resources.[*].Properties.KmsMasterKeyId exists and $.Resources.[*].Properties.KmsMasterKeyId contains alias/aws/sqs)``  | 0a626f64-d911-4366-b7dc-629a6557d7b5 | True |  
+  
+  
+  
+| medium | ``AWS VPC subnets should not allow automatic public IP assignment``  | ``$.Resources.[*].Type equals AWS::EC2::Subnet and ($.Resources.[*].Properties.MapPublicIpOnLaunch exists and $.Resources.[*].Properties.MapPublicIpOnLaunch is true)``  | 11743cd3-35e4-4639-91e1-bc87b52d4cf5 | True |  
+  
+  
+  
+| medium | ``AWS RDS event subscription disabled for DB security groups``  | ``$.Resources.[*].Type equals AWS::RDS::EventSubscription and $.Resources.[*].Properties.SourceType equals db-security-group and (($.Resources.[*].Properties.Enabled is true and ($.Resources.[*].Properties.SourceIds is not empty or $.Resources.[*].Properties.EventCategories is not empty)))``  | 5b3c12cf-eef5-42de-afbe-4e80e1dfe600 | True |  
+  
+  
+  
+| medium | ``AWS Access logging not enabled on S3 buckets``  | ``$.Resources.[*].Type contains AWS::S3::Bucket and ($.Resources.[*].Properties.LoggingConfiguration does not exist or $.Resources.[*].Properties.LoggingConfiguration is empty or $.Resources.[*].Properties.LoggingConfiguration.DestinationBucketName does not exist or $.Resources.[*].Properties.LoggingConfiguration.LogFilePrefix does not exist)``  | 4daa435b-fa46-457a-9359-6a4b4a43a442 | True |  
+  
+  
+  
+| medium | `` AWS ECS task definition logging not enabled``  | ``$.Resources.[*].Type equals AWS::ECS::TaskDefinition and ($.Resources.[*].Properties.ContainerDefinitions[*].LogConfiguration.LogDriver does not exist or $.Resources.[*].Properties.ContainerDefinitions[*].LogConfiguration.LogDriver any empty)``  | 404b49c0-ad7e-41a7-94ae-587901872524 | True |  
+  
+  
+  
+| medium | `` AWS ECS task definition resource limits not set``  | ``$.Resources.[*].Type equals AWS::ECS::TaskDefinition and (($.Resources.[*].Properties.Cpu does not exist or $.Resources.[*].Properties.ContainerDefinitions[*].Cpu does not exist) or ($.Resources.[*].Properties.Cpu any equal 0 or $.Resources.[*].Properties.ContainerDefinitions[*].Cpu any equal 0) or ($.Resources.[*].Properties.Memory does not exist or $.Resources.[*].Properties.ContainerDefinitions[*].Memory does not exist))``  | 44a82298-64d1-4b4b-a9ad-eeda02448975 | True |  
+  
+  
+  
+| high | ``AWS ECS task definition elevated privileges enabled``  | ``$.Resources.[*].Type equals AWS::ECS::TaskDefinition and $.Resources.[*].Properties.ContainerDefinitions[*].Privileged exists and $.Resources.[*].Properties.ContainerDefinitions[*].Privileged is true``  | 38026e84-451b-4290-a008-562eeb36212a | True |  
+  
+  
+  
+| low | ``AWS ECS task definition readonlyRootFilesystem not enabled``  | ``$.Resources.[*].Type equals AWS::ECS::TaskDefinition and ($.Resources.[*].Properties.ContainerDefinitions[*].ReadonlyRootFilesystem does not exist or $.Resources.[*].Properties.ContainerDefinitions[*].ReadonlyRootFilesystem is false)``  | 0f4959be-5d2d-41cf-aa45-08bb4c13121f | True |  
+  
+  
+  
+| low | ``AWS ECS task definition root user found``  | ``$.Resources.[*].Type equals AWS::ECS::TaskDefinition and $.Resources.[*].Properties.ContainerDefinitions[*].User exists and $.Resources.[*].Properties.ContainerDefinitions[*].User contains root``  | 05bc14cd-8bae-41f9-b9d4-626be30387cf | True |  
+  
+  
+  
+| medium | ``AWS ECS task definition execution IAM Role not found``  | ``$.Resources.[*].Type equals AWS::ECS::TaskDefinition and ($.Resources.[*].Properties.ExecutionRoleArn does not exist or $.Resources.[*].Properties.ExecutionRoleArn does not start with arn:aws:iam)``  | a76c8132-7cc3-40b1-a417-d3a41fc44f89 | True |  
+  
+  
+  
+| high | ``AWS Kubernetes unsupported master node version``  | ``$.Resources.[*].Type equals AWS::EKS::Cluster and $.Resources.[*].Properties.Version starts with 1.9``  | 4f5deb35-a3cf-4544-a54a-5443b8eaa5c7 | True |  
+  
+  
+  
+| medium | ``AWS CloudTrail is not enabled in all regions``  | ``$.Resources.[*].Type equals AWS::CloudTrail::Trail and ($.Resources.[*].Properties.IsMultiRegionTrail does not exist or ($.Resources.[*].Properties.IsMultiRegionTrail exists and $.Resources.[*].Properties.IsMultiRegionTrail is false))``  | c1ad39ed-5341-43cb-8266-4d93a2033d75 | True |  
+  
+  
+  
+| high | ``AWS S3 buckets are accessible to public``  | ``$.Resources.[*].Type equals AWS::S3::Bucket and ($.Resources.[*].Properties.AccessControl exists and ($.Resources.[*].Properties.AccessControl equals PublicRead or $.Resources.[*].Properties.AccessControl equals PublicReadWrite) and $.Resources.[*].Properties.WebsiteConfiguration does not exist)``  | bbb01285-7fc6-4649-85c0-6ab9f08bde4f | True |  
+  
+  
+  
+| low | ``AWS S3 buckets do not have server side encryption``  | ``$.Resources.[*].Type equals AWS::S3::Bucket and ($.Resources.[*].Properties.BucketEncryption does not exist or $.Resources.[*].Properties.BucketEncryption.ServerSideEncryptionConfiguration[*].ServerSideEncryptionByDefault.SSEAlgorithm equals Null)``  | ff6a3231-bb09-4fba-82ea-46ee3228a9f2 | True |  
+  
+  
+  
+| high | ``AWS RDS instance is not encrypted``  | ``$.Resources.[*].Type equals AWS::RDS::DBInstance and ($.Resources.[*].Properties.StorageEncrypted does not exist or $.Resources.[*].Properties.StorageEncrypted is false)``  | 34fa9efb-d18f-41e4-b93f-2f7e5378752c | True |  
+  
+  
+  
+| low | ``AWS RDS instance without Automatic Backup setting``  | ``$.Resources.[*].Type equals AWS::RDS::DBInstance and $.Resources.[*].Properties.BackupRetentionPeriod does not exist``  | f81d0239-3633-4828-a499-d2d1b1219a5c | True |  
+  
+  
+  
+| low | ``AWS RDS instance with copy tags to snapshots disabled``  | ``$.Resources.[*].Type equals AWS::RDS::DBInstance and ($.Resources.[*].Properties.CopyTagsToSnapshot  does not exist or $.Resources.[*].Properties.CopyTagsToSnapshot is false)``  | 8a910436-344a-4bd9-9359-239a3ca13b99 | True |  
+  
+  
+  
